@@ -19,6 +19,7 @@ from agents.agent_orchestrator import AgentOrchestrator
 from agents.video_analysis_agent import VideoAnalysisAgent
 from agents.repository_agent import RepositoryAgent
 from agents.app_building_agent import AppBuildingAgent
+from agents.trend_analysis_agent import TrendAnalysisAgent
 from agents.monetization_agent import MonetizationAgent
 
 def run_traditional_demo():
@@ -184,11 +185,12 @@ def run_agentic_demo():
     print("1. Video Analysis Agent - Extracts information from the video")
     print("2. Repository Detective - Analyzes GitHub repositories mentioned in the video")
     print("3. Application Builder - Builds applications from the repositories")
-    print("4. Monetization Strategist - Develops monetization strategies")
+    print("4. Trend Analysis Agent - Analyzes technology trends and market opportunities")
+    print("5. Monetization Strategist - Develops monetization strategies")
     
     try:
         # Initialize the agent orchestrator
-        print("\n[1/4] Initializing agent orchestrator...")
+        print("\n[1/5] Initializing agent orchestrator...")
         orchestrator = AgentOrchestrator(openai_api_key=openai_api_key)
         print("✓ Agent orchestrator initialized")
         
@@ -196,7 +198,7 @@ def run_agentic_demo():
         # In a real scenario, this would call orchestrator.run_monetization_workflow(video_id)
         
         # Simulate video analysis
-        print("\n[2/4] Video Analysis Agent is analyzing the video...")
+        print("\n[2/5] Video Analysis Agent is analyzing the video...")
         video_analysis_agent = VideoAnalysisAgent(output_dir=output_dir)
         video_data = {
             "metadata": {
@@ -238,7 +240,7 @@ def run_agentic_demo():
         print(f"✓ Video analysis completed and saved to {video_analysis_path}")
         
         # Simulate repository analysis
-        print("\n[3/4] Repository Detective is analyzing the GitHub repository...")
+        print("\n[3/5] Repository Detective is analyzing the GitHub repository...")
         repository_agent = RepositoryAgent(output_dir=output_dir)
         repo_data = {
             "repository": {
@@ -303,7 +305,7 @@ def run_agentic_demo():
         print(f"✓ Repository analysis completed and saved to {repo_analysis_path}")
         
         # Simulate application building
-        print("\n[4/4] Application Builder is setting up the application...")
+        print("\n[4/5] Application Builder is setting up the application...")
         app_building_agent = AppBuildingAgent(output_dir=output_dir)
         app_data = {
             "environment_setup": {
@@ -346,127 +348,66 @@ def run_agentic_demo():
             json.dump(app_data, f, indent=2)
         print(f"✓ Application build process completed and saved to {app_build_path}")
         
-        # Generate monetization strategies
-        print("\n[5/4] Monetization Strategist is developing monetization strategies...")
-        monetization_agent = MonetizationAgent(output_dir=output_dir)
-        monetization_strategies = monetization_agent.generate_monetization_strategies(
-            video_data, repo_data, app_data
-        )
+        # Simulate trend analysis
+        print("\n[5/5] Trend Analysis Agent is analyzing technology trends and market opportunities...")
+        trend_analysis_agent = TrendAnalysisAgent(output_dir=output_dir)
+        trend_analysis_result = trend_analysis_agent.analyze_trends(video_data, repo_data)
         
-        # For demo purposes, create a simplified version
-        simplified_strategies = {
-            "content_repurposing": [
-                {
-                    "title": "Create a React + FastAPI Course",
-                    "description": "Develop a comprehensive online course teaching how to build full-stack applications with React and FastAPI.",
-                    "estimated_revenue": "$5,000 - $20,000",
-                    "time_investment": "4-8 weeks",
-                    "steps": [
-                        "Outline course curriculum based on video content",
-                        "Create detailed lessons and coding exercises",
-                        "Record video tutorials",
-                        "Set up course platform (Udemy, Teachable, etc.)",
-                        "Launch and market the course"
-                    ]
-                }
-            ],
-            "application_development": [
-                {
-                    "title": "React + FastAPI SaaS Template",
-                    "description": "Develop a premium SaaS template based on the repository that businesses can use to jumpstart their projects.",
-                    "estimated_revenue": "$10,000 - $50,000",
-                    "time_investment": "2-3 months",
-                    "steps": [
-                        "Enhance the existing repository with premium features",
-                        "Add authentication, payment processing, and admin dashboard",
-                        "Create documentation and setup guides",
-                        "Set up a landing page and marketing materials",
-                        "Sell on platforms like ThemeForest or directly"
-                    ]
-                }
-            ],
-            "ethical_evaluation": {
-                "considerations": [
-                    "Respect the original creator's intellectual property rights",
-                    "Give proper attribution to the original creators",
-                    "Ensure that monetization strategies do not mislead users"
-                ]
-            },
-            "legal_evaluation": {
-                "considerations": [
-                    "Comply with the terms of the repository's license",
-                    "Ensure that monetization strategies do not infringe on trademarks or patents",
-                    "Adhere to relevant data protection and privacy laws"
-                ]
-            }
-        }
+        # Save trend analysis results
+        trend_analysis_path = os.path.join(output_dir, "trend_analysis_results.json")
+        with open(trend_analysis_path, "w", encoding="utf-8") as f:
+            json.dump(trend_analysis_result, f, indent=2)
+        
+        print("✓ Trend analysis completed")
+        
+        # Display trend analysis summary
+        if trend_analysis_result.get("trend_report", {}).get("trend_report", {}).get("summary"):
+            summary = trend_analysis_result["trend_report"]["trend_report"]["summary"]
+            print("\nTrend Analysis Summary:")
+            print(f"Top Technology: {summary.get('top_technology', 'Unknown')}")
+            print(f"Content Popularity: {summary.get('content_popularity', 'Unknown')}")
+            print(f"Market Fit: {summary.get('market_fit', 'Unknown')}")
+            
+            # Display key insights
+            insights = trend_analysis_result["trend_report"]["trend_report"].get("key_insights", [])
+            if insights:
+                print("\nKey Insights:")
+                for insight in insights[:3]:  # Show up to 3 insights
+                    print(f"- {insight}")
+        
+        # Simulate monetization strategy generation
+        print("\n[6/5] Monetization Strategist is developing strategies...")
+        monetization_agent = MonetizationAgent(output_dir=output_dir)
+        monetization_data = monetization_agent.generate_monetization_strategies(
+            video_data, repo_data, app_data, trend_analysis_result
+        )
         
         # Save monetization strategies
         strategies_path = os.path.join(output_dir, "monetization_strategies.json")
         with open(strategies_path, "w", encoding="utf-8") as f:
-            json.dump(simplified_strategies, f, indent=2)
+            json.dump(monetization_data, f, indent=2)
         print(f"✓ Monetization strategies generated and saved to {strategies_path}")
         
-        # Create a monetization plan markdown file
-        plan_content = """# Comprehensive Monetization Plan
-
-## Ethical and Legal Considerations
-
-### Ethical Considerations
-- Respect the original creator's intellectual property rights
-- Give proper attribution to the original creators
-- Ensure that monetization strategies do not mislead users
-
-### Legal Considerations
-- Comply with the terms of the repository's license
-- Ensure that monetization strategies do not infringe on trademarks or patents
-- Adhere to relevant data protection and privacy laws
-
-## Content Repurposing Strategies
-
-### Strategy 1: Create a React + FastAPI Course
-Develop a comprehensive online course teaching how to build full-stack applications with React and FastAPI.
-
-#### Implementation Steps
-1. Outline course curriculum based on video content
-2. Create detailed lessons and coding exercises
-3. Record video tutorials
-4. Set up course platform (Udemy, Teachable, etc.)
-5. Launch and market the course
-
-**Estimated Revenue**: $5,000 - $20,000
-
-**Time Investment**: 4-8 weeks
-
-## Application Development Strategies
-
-### Strategy 1: React + FastAPI SaaS Template
-Develop a premium SaaS template based on the repository that businesses can use to jumpstart their projects.
-
-#### Implementation Steps
-1. Enhance the existing repository with premium features
-2. Add authentication, payment processing, and admin dashboard
-3. Create documentation and setup guides
-4. Set up a landing page and marketing materials
-5. Sell on platforms like ThemeForest or directly
-
-**Estimated Revenue**: $10,000 - $50,000
-
-**Time Investment**: 2-3 months
-"""
+        # Combine all results
+        results = {
+            "video_analysis": video_data,
+            "repository_analysis": repo_data,
+            "application_building": app_data,
+            "trend_analysis": trend_analysis_result,
+            "monetization_strategies": monetization_data
+        }
         
-        plan_path = os.path.join(output_dir, "monetization_plan.md")
-        with open(plan_path, "w", encoding="utf-8") as f:
-            f.write(plan_content)
-        print(f"✓ Comprehensive monetization plan created and saved to {plan_path}")
+        # Save the combined results
+        results_path = os.path.join(output_dir, "agentic_results.json")
+        with open(results_path, "w", encoding="utf-8") as f:
+            json.dump(results, f, indent=2)
         
         print("\n" + "=" * 80)
         print("Agentic demo completed! All output files are saved in the 'agent_demo_output' directory.")
         print("=" * 80)
-        
+    
     except Exception as e:
-        print(f"\n❌ Error running agentic demo: {str(e)}")
-        print("Make sure all required environment variables are set and dependencies are installed.")
+        print(f"\n❌ Error in agentic demo: {str(e)}")
 
 def main():
     """Run the demo of the YouTube Content Monetization Framework."""

@@ -15,7 +15,8 @@ The framework uses a crew of specialized agents, each responsible for a specific
 1. **Video Analysis Agent**: Analyzes YouTube videos to extract metadata, transcripts, and key concepts.
 2. **Repository Agent**: Detects and analyzes GitHub repositories mentioned in the videos.
 3. **Application Building Agent**: Sets up and runs applications from the analyzed repositories.
-4. **Monetization Agent**: Develops ethical and legal monetization strategies based on the video and repository analyses.
+4. **Trend Analysis Agent**: Analyzes technology trends, market opportunities, and content popularity.
+5. **Monetization Agent**: Develops ethical and legal monetization strategies based on the video, repository, and trend analyses.
 
 These agents are orchestrated by the **Agent Orchestrator**, which manages the workflow and ensures seamless coordination between agents.
 
@@ -85,13 +86,23 @@ Located in `agents/app_building_agent.py`, this agent:
 - Builds and runs the application
 - Documents the setup process and application functionality
 
+### Trend Analysis Agent
+
+Located in `agents/trend_analysis_agent.py`, this agent:
+- Analyzes technology trends for technologies mentioned in the video
+- Evaluates content popularity based on video engagement metrics
+- Identifies market opportunities based on technology trends and repository data
+- Generates comprehensive trend reports with insights and recommendations
+- Provides data-driven insights to inform monetization strategies
+
 ### Monetization Agent
 
 Located in `agents/monetization_agent.py`, this agent:
-- Analyzes the video content and repository data
+- Analyzes the video content, repository data, and trend analysis
 - Generates ethical and legal monetization strategies
 - Evaluates the market potential of the application
 - Creates a comprehensive monetization plan with specific implementation steps
+- Incorporates trend insights to optimize revenue potential
 
 ### Agent Orchestrator
 
@@ -108,7 +119,36 @@ The agentic workflow produces the following outputs:
 1. **Video Analysis**: Detailed information about the video, including metadata, transcript, and detected technologies.
 2. **Repository Analysis**: Analysis of GitHub repositories mentioned in the video, including structure, languages, and dependencies.
 3. **Application Build**: Documentation of the application build process, including setup commands and runtime information.
-4. **Monetization Strategies**: Comprehensive monetization strategies with ethical and legal considerations, specific implementation steps, and revenue estimates.
+4. **Trend Analysis**: Comprehensive analysis of technology trends, market opportunities, and content popularity, with insights and recommendations.
+5. **Monetization Strategies**: Comprehensive monetization strategies with ethical and legal considerations, specific implementation steps, and revenue estimates.
+
+## Trend Analysis Features
+
+The trend analysis component provides several key capabilities:
+
+1. **Technology Trend Analysis**:
+   - Evaluates the growth rate and adoption of technologies
+   - Assesses the monetization potential of each technology
+   - Analyzes job market demand and salary trends
+   - Identifies the most promising technologies for monetization
+
+2. **Content Popularity Analysis**:
+   - Analyzes video engagement metrics (views, likes, comments)
+   - Calculates engagement rates to measure audience interest
+   - Provides insights on content optimization
+   - Identifies topics with high audience engagement
+
+3. **Market Opportunity Analysis**:
+   - Identifies emerging opportunities in technology markets
+   - Analyzes competitive landscape and market saturation
+   - Evaluates repository market fit and application type
+   - Provides recommendations for market positioning
+
+4. **Trend Reporting**:
+   - Generates comprehensive trend reports in JSON and Markdown formats
+   - Provides actionable insights and recommendations
+   - Visualizes trend data in structured formats
+   - Integrates with monetization strategies for data-driven decision making
 
 ## Ethical and Legal Considerations
 
@@ -125,5 +165,6 @@ Potential future enhancements to the agentic capabilities include:
 - Integration with additional AI models for more sophisticated analysis
 - Support for more repository hosting platforms beyond GitHub
 - Automated deployment of built applications to cloud platforms
-- Market analysis and trend forecasting for monetization strategies
+- Enhanced market analysis and trend forecasting for monetization strategies
 - User feedback integration to improve strategy recommendations
+- Real-time trend monitoring and strategy adaptation

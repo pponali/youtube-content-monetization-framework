@@ -26,6 +26,7 @@ class AgentOrchestrator:
         self.video_analysis_agent = self._create_video_analysis_agent()
         self.repo_detection_agent = self._create_repo_detection_agent()
         self.app_building_agent = self._create_app_building_agent()
+        self.trend_analysis_agent = self._create_trend_analysis_agent()
         self.monetization_agent = self._create_monetization_agent()
     
     def _create_video_analysis_agent(self) -> Agent:
@@ -54,6 +55,16 @@ class AgentOrchestrator:
             role="Application Builder",
             goal="Build functional applications from GitHub repositories by understanding their structure and requirements",
             backstory="You are a full-stack developer with experience in multiple programming languages and frameworks. You excel at setting up development environments and getting applications running quickly.",
+            verbose=True,
+            allow_delegation=True
+        )
+    
+    def _create_trend_analysis_agent(self) -> Agent:
+        """Create an agent specialized in analyzing technology trends and market opportunities."""
+        return Agent(
+            role="Technology Trend Analyst",
+            goal="Analyze technology trends, market opportunities, and content popularity to inform monetization strategies",
+            backstory="You are an expert in technology trends and market analysis. You can identify emerging technologies, analyze market opportunities, and provide insights that can inform monetization strategies.",
             verbose=True,
             allow_delegation=True
         )
@@ -118,7 +129,25 @@ class AgentOrchestrator:
             expected_output="A working application built from the repository, with documentation on how to run it."
         )
     
-    def create_monetization_task(self, video_analysis_result: Dict[str, Any], repo_analysis_result: Dict[str, Any], app_building_result: Dict[str, Any]) -> Task:
+    def create_trend_analysis_task(self, video_analysis_result: Dict[str, Any], repo_analysis_result: Dict[str, Any]) -> Task:
+        """
+        Create a task for analyzing technology trends and market opportunities.
+        
+        Args:
+            video_analysis_result: Result from the video analysis task.
+            repo_analysis_result: Result from the repository analysis task.
+            
+        Returns:
+            Task for trend analysis.
+        """
+        return Task(
+            description="Analyze technology trends, market opportunities, and content popularity based on the video content and repository data. Identify emerging technologies, evaluate market potential, and provide insights to inform monetization strategies.",
+            agent=self.trend_analysis_agent,
+            context=[video_analysis_result, repo_analysis_result],
+            expected_output="A comprehensive trend analysis report with insights on technology trends, market opportunities, and content popularity."
+        )
+    
+    def create_monetization_task(self, video_analysis_result: Dict[str, Any], repo_analysis_result: Dict[str, Any], app_building_result: Dict[str, Any], trend_analysis_result: Dict[str, Any]) -> Task:
         """
         Create a task for developing monetization strategies.
         
@@ -126,23 +155,26 @@ class AgentOrchestrator:
             video_analysis_result: Result from the video analysis task.
             repo_analysis_result: Result from the repository analysis task.
             app_building_result: Result from the application building task.
+            trend_analysis_result: Result from the trend analysis task.
             
         Returns:
             Task for monetization strategy development.
         """
         return Task(
-            description="Develop ethical and legal monetization strategies for the technical content and application. Consider content repurposing, educational products, application development, consulting, and affiliate marketing.",
+            description="Develop ethical and legal monetization strategies for the technical content and application. Consider content repurposing, educational products, application development, consulting, and affiliate marketing. Use the trend analysis to inform your strategy recommendations.",
             agent=self.monetization_agent,
-            context=[video_analysis_result, repo_analysis_result, app_building_result],
-            expected_output="A comprehensive monetization strategy with specific recommendations for generating revenue from the content and application."
+            context=[video_analysis_result, repo_analysis_result, app_building_result, trend_analysis_result],
+            expected_output="A comprehensive monetization strategy with specific recommendations for generating revenue from the content and application, informed by trend analysis."
         )
     
-    def run_monetization_workflow(self, video_id: str) -> Dict[str, Any]:
+    def run_monetization_workflow(self, video_id: str, output_dir: str = "output", verbose: bool = False) -> Dict[str, Any]:
         """
         Run the complete monetization workflow for a YouTube video.
         
         Args:
             video_id: YouTube video ID to process.
+            output_dir: Directory to save output files.
+            verbose: Whether to print verbose output.
             
         Returns:
             Dictionary containing the results of each task in the workflow.
@@ -156,10 +188,11 @@ class AgentOrchestrator:
                 self.video_analysis_agent,
                 self.repo_detection_agent,
                 self.app_building_agent,
+                self.trend_analysis_agent,
                 self.monetization_agent
             ],
             tasks=[video_analysis_task],
-            verbose=2,
+            verbose=2 if verbose else 0,
             process=Process.sequential
         )
         
@@ -177,11 +210,17 @@ class AgentOrchestrator:
         crew.tasks.append(app_building_task)
         app_building_result = crew.kickoff()
         
-        # After application building, create and add monetization task
+        # After application building, create and add trend analysis task
+        trend_analysis_task = self.create_trend_analysis_task(video_analysis_result, repo_analysis_result)
+        crew.tasks.append(trend_analysis_task)
+        trend_analysis_result = crew.kickoff()
+        
+        # After trend analysis, create and add monetization task
         monetization_task = self.create_monetization_task(
             video_analysis_result,
             repo_analysis_result,
-            app_building_result
+            app_building_result,
+            trend_analysis_result
         )
         crew.tasks.append(monetization_task)
         final_result = crew.kickoff()
@@ -190,5 +229,6 @@ class AgentOrchestrator:
             "video_analysis": video_analysis_result,
             "repo_analysis": repo_analysis_result,
             "app_building": app_building_result,
+            "trend_analysis": trend_analysis_result,
             "monetization": final_result
         }

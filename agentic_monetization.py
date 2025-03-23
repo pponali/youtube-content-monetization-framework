@@ -23,6 +23,7 @@ from agents.agent_orchestrator import AgentOrchestrator
 from agents.video_analysis_agent import VideoAnalysisAgent
 from agents.repository_agent import RepositoryAgent
 from agents.app_building_agent import AppBuildingAgent
+from agents.trend_analysis_agent import TrendAnalysisAgent
 from agents.monetization_agent import MonetizationAgent
 
 # Configure logging
@@ -105,6 +106,11 @@ def process_video(video_id, output_dir="output", verbose=False):
             "output_directory": video_output_dir,
             "video_title": results.get("video_data", {}).get("metadata", {}).get("title", "Unknown"),
             "detected_repositories": len(results.get("repository_data", {}).get("repositories", [])),
+            "trend_analysis": {
+                "top_technology": results.get("trend_analysis", {}).get("technology_trends", {}).get("top_technology", {}).get("name", "Unknown"),
+                "content_popularity": results.get("trend_analysis", {}).get("content_popularity", {}).get("popularity_level", "Unknown"),
+                "market_opportunities": len(results.get("trend_analysis", {}).get("market_opportunities", {}).get("emerging_opportunities", []))
+            },
             "monetization_strategies": len(results.get("monetization_strategies", {}).get("strategies", [])),
             "top_strategy": results.get("monetization_strategies", {}).get("top_strategy", "None")
         }
